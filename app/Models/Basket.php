@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Events\BasketSaved;
 
 class Basket extends Model
 {
@@ -25,4 +27,13 @@ class Basket extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    /**
+     * The event map for the model.
+     *
+     * @var array<string, string>
+     */
+    protected $dispatchesEvents = [
+        'saved' => BasketSaved::class
+    ];
 }
