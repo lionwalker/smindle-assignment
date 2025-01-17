@@ -35,13 +35,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost/api/orders",
+							"raw": "http://localhost/api/v1/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
+								"v1",
 								"orders"
 							]
 						}
@@ -65,13 +66,14 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost/api/orders",
+							"raw": "http://localhost/api/v1/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"path": [
 								"api",
+								"v1",
 								"orders"
 							]
 						}

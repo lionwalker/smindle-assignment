@@ -1,66 +1,183 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Smindle Order Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project implements a Laravel-based order processing system with asynchronous subscription handling as per the assignment requirements.
 
-## About Laravel
+## Setup Instructions
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Clone the repository
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+    ``` bash
+    git clone https://github.com/lionwalker/smindle-assignment.git
+    cd smindle-assignment
+    ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. Start the application using Docker
 
-## Learning Laravel
+    ``` bash
+    docker compose up -d
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## API Endpoints
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. Create Order
+    - URL: http://localhost/api/v1/orders
+    - Method: POST
+    - Content-Type: application/json
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    **Request Payload**
 
-## Laravel Sponsors
+    ``` json
+    {
+        "first_name": "Alan",
+        "last_name": "Turing",
+        "address": "123 Enigma Ave, Bletchley Park, UK",
+        "basket": [
+            {
+                "name": "Smindle ElePHPant plushie",
+                "type": "unit",
+                "price": 295.45
+            },
+            {
+                "name": "Syntax & Chill",
+                "type": "subscription",
+                "price": 175.00
+            }
+        ]
+    }
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    **Success Response**
 
-### Premium Partners
+    ``` json
+    {
+        "data":{
+            "id":13,
+            "first_name":"Alan",
+            "last_name":"Turing",
+            "address":"123 Enigma Ave, Bletchley Park, UK",
+            "basket":[
+                {
+                    "id":17,
+                    "name":"Smindle ElePHPant plushie",
+                    "type":"unit",
+                    "price":295.45
+                },
+                {
+                    "id":18,
+                    "name":"Syntax & Chill",
+                    "type":"subscription",
+                    "price":175
+                }
+            ],
+            "created_at":"2025-01-17T15:12:45.000000Z"
+        }
+    }
+    ```
+2. List Orders
+    - URL: http://localhost/api/v1/orders
+    - Method: GET
+    - Query Parameters:
+        - page: Page number (optional)
+        - per_page: Items per page (optional, default: 5)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+    **Success Response**
 
-## Contributing
+    ``` json
+    {
+        "data":[
+            {
+                "id":1,
+                "first_name":"Alan",
+                "last_name":"Turing",
+                "address":"123 Enigma Ave, Bletchley Park, UK",
+                "basket":[
+                    {
+                    "id":1,
+                    "name":"Smindle ElePHPant plushie",
+                    "type":"unit",
+                    "price":295.45
+                    },
+                    {
+                    "id":2,
+                    "name":"Syntax & Chill",
+                    "type":"subscription",
+                    "price":175
+                    }
+                ],
+                "created_at":"2025-01-17T16:07:02.000000Z"
+            }
+        ],
+        "links":{
+            "first":"http://localhost/api/orders?page=1",
+            "last":"http://localhost/api/orders?page=1",
+            "prev":null,
+            "next":null
+        },
+        "meta":{
+            "current_page":1,
+            "from":1,
+            "last_page":1,
+            "links":[
+                {
+                    "url":null,
+                    "label":"&laquo; Previous",
+                    "active":false
+                },
+                {
+                    "url":"http://localhost/api/orders?page=1",
+                    "label":"1",
+                    "active":true
+                },
+                {
+                    "url":null,
+                    "label":"Next &raquo;",
+                    "active":false
+                }
+            ],
+            "path":"http://localhost/api/orders",
+            "per_page":5,
+            "to":1,
+            "total":1
+        }
+    }
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Implementation Details
 
-## Code of Conduct
+### Requirements Fulfilled
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Order Endpoint
+    - Created endpoint that receives the specified order payload
+    - Implemented using API versioning for future maintainability
 
-## Security Vulnerabilities
+- Request Validation
+    - Implemented Laravel Form Request validation
+    - Order data is validated and saved to database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Asynchronous Subscription Processing
+    - Baskets with subscription type are processed asynchronously
+    - Uses Laravel Events, Listeners, and Queue system
+    - Sends subscription data to the specified third-party endpoint
 
-## License
+## Technical Approach
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    - Used API versioning (/api/v1/) for future extensibility
+    - Implemented Laravel Form Request Validation for data validation
+    - Used Laravel Resource for response formatting
+    - Implemented Events and Listeners for subscription handling
+    - Queue system processes subscriptions asynchronously
+
+## Testing
+
+    - Postman collection is included in the artifacts folder for API testing
+
+## Future Improvements
+
+    - Add unit and feature testing
+    - Implement authentication system
+    - Add seperate API documentation
+    - Set up monitoring and logging
+
+## Note
+
+The code is structured to meet the assignment requirements while maintaining good practices and allowing for future scalability.
