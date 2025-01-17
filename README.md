@@ -11,6 +11,12 @@ This project implements a Laravel-based order processing system with asynchronou
     cd smindle-assignment
     ```
 
+2. Run shell file to do initial setup
+
+    ``` bash
+    sh entrypoint.sh
+    ```
+
 2. Start the application using Docker
 
     ``` bash
