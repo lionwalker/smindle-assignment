@@ -102,7 +102,7 @@ services:
             - sail
     queue:
         image: 'sail-8.4/app'
-        container_name: '${APP_NAME}-queue'
+        container_name: 'smindle-app-queue'
         restart: unless-stopped
         volumes:
             - '.:/var/www/html'
