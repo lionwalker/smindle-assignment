@@ -1,4 +1,30 @@
 services:
+    deployer:
+        image: 'laravelsail/php84-composer:latest'
+        volumes:
+            - '.:/var/www/html'
+        working_dir: /var/www/html
+        networks:
+            - sail
+        depends_on:
+            - mysql
+        entrypoint: >
+            sh -c "
+                cp .env.example .env &&
+                php artisan config:clear &&
+                php artisan key:generate &&
+                php artisan config:cache &&
+                php artisan route:cache &&
+                touch database/database.sqlite &&
+                chmod -R 777 storage bootstrap/cache database/database.sqlite &&
+                echo 'Deployment complete' > storage/deployer.ready &&
+                exit 0       
+            "
+        healthcheck:
+            test: ["CMD", "test", "-f", "/var/www/html/storage/deployer.ready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
     laravel.test:
         build:
             context: './vendor/laravel/sail/runtimes/8.4'
@@ -22,7 +48,8 @@ services:
         networks:
             - sail
         depends_on:
-            - mysql
+            deployer:
+                condition: service_completed_successfully
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -48,21 +75,15 @@ services:
             retries: 3
             timeout: 5s
     queue-worker:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.4
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
         image: sail-8.4/app
-        container_name: laravel-queue
-        restart: unless-stopped
-        command: '/usr/bin/php artisan queue:work'
+        volumes:
+            - '.:/var/www/html'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
-        volumes:
-            - '.:/var/www/html'
+        working_dir: /var/www/html
+        restart: unless-stopped
+        command: sh -c 'php artisan queue:work'
         networks:
             - sail
         depends_on:
