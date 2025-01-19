@@ -14,12 +14,7 @@ This project implements a Laravel-based order processing system with asynchronou
 2. Run following bash command
 
     ``` bash
-    docker run --rm \
-        -u "$(id -u):$(id -g)" \
-        -v "$(pwd):/var/www/html" \
-        -w /var/www/html \
-        laravelsail/php84-composer:latest \
-        composer install --ignore-platform-reqs
+    docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html laravelsail/php84-composer:latest composer install --ignore-platform-reqs
     ```
 
 3. Start the application using Docker
